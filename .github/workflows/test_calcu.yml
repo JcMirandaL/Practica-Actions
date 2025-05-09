@@ -1,0 +1,44 @@
+#nombre
+name: Run Tests and Upload Artifact
+
+#aqui se indica en caso se dispara o activa
+on: [push, pull_request]
+
+#inicio de jobs peuden haber varios
+#con needs: EjmpTest (indico que primero se tiene que ejecutar test)
+jobs:
+#nombre del job
+  test:
+#aqui se indica que maq virtual(esta seria ubuntu ultima version)
+    runs-on: ubuntu-latest
+#pasos
+    steps:
+#primer paso y su nombre
+      - name: Checkout code
+#Este es un action(CHECKOUT@v4) de github que descarga una copia de mi repo en la maq virtual(ubuntu)
+        uses: actions/checkout@v4
+#segundo paso y su nombre
+      - name: Setup Node.js
+      #este action instalar node en el ubuntu
+        uses: actions/setup-node@v4
+        #con
+        with:
+        #la version (aqui indica la version de node)
+          node-version: 22
+#tercer paso y su nombre
+      - name: Install dependencies
+      #instala las dependensias faltantes en el ubuntu para la prueba(correr codigo)
+        run: npm install
+#cuarto paso y su nombre
+      - name: Run tests and generate report
+      #aqui en este paso lo corre para la prueba
+        run: node test/calculator.test.js
+#Tercer paso y su nombre
+      - name: Upload artifact
+      #este action de github sube unartefacto o archivo
+        uses: actions/upload-artifact@v4
+        #con
+        with:
+          name: test-results
+          #los resultados
+          path: results/test-results.txt
